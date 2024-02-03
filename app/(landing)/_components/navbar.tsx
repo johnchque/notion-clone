@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import { useScrollTop } from "@/hooks/use-scroll-top";
 import { ModeToggle } from "@/components/mode-toggle";
 import { cn } from "@/lib/utils";
