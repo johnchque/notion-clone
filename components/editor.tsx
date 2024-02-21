@@ -1,6 +1,12 @@
 "use client";
 
-import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
+import {
+  BlockNoteEditor,
+  DefaultBlockSchema,
+  DefaultInlineContentSchema,
+  DefaultStyleSchema,
+  PartialBlock,
+} from "@blocknote/core";
 import { BlockNoteView, useBlockNote } from "@blocknote/react";
 import { useTheme } from "next-themes";
 import "@blocknote/react/style.css";
@@ -14,21 +20,25 @@ interface EditorProps {
 
 const Editor = ({ onChange, initialContent, editable }: EditorProps) => {
   const { resolvedTheme } = useTheme();
-  const {edgestore} = useEdgeStore();
+  const { edgestore } = useEdgeStore();
 
-  const handleUpload = async (file:File) => {
-    const response = await edgestore.publicFiles.upload({file});
+  const handleUpload = async (file: File) => {
+    const response = await edgestore.publicFiles.upload({ file });
     return response.url;
-  }
+  };
   const editor: BlockNoteEditor = useBlockNote({
     editable,
     initialContent: initialContent
-      ? (JSON.parse(initialContent) as PartialBlock[])
+      ? (JSON.parse(initialContent) as PartialBlock<
+          DefaultBlockSchema,
+          DefaultInlineContentSchema,
+          DefaultStyleSchema
+        >[])
       : undefined,
     onEditorContentChange: (editor) => {
       onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
     },
-    uploadFile: handleUpload
+    uploadFile: handleUpload,
   });
   return (
     <div>
